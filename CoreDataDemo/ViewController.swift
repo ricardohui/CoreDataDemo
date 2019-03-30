@@ -16,9 +16,9 @@ class ViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let newUser = NSEntityDescription.insertNewObject(forEntityName:"Users", into: context)
-        newUser.setValue("kirsten",forKey:"username")
+        newUser.setValue("Ricardo",forKey:"username")
         newUser.setValue("myPass", forKey: "password")
-        newUser.setValue(35, forKey: "age")
+        newUser.setValue(2, forKey: "age")
         
         do {
             try context.save()
@@ -29,6 +29,13 @@ class ViewController: UIViewController {
         
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
+        
+        request.predicate = NSPredicate(format: "age < %@", "10")
+        
+        
+        
+        
+        
         request.returnsObjectsAsFaults = false
         do {
         let results =  try context.fetch(request)
@@ -36,6 +43,8 @@ class ViewController: UIViewController {
                 for result in results as! [NSManagedObject]{
                     if let username = result.value(forKey: "username") as? String{
                         print(username)
+                        context.delete(result) // delete an object
+                        
                     }
                 }
             }else{
